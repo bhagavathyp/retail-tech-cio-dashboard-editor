@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
+// import Login from "./Login";   // 🔹 Step 1: Import
 import { toPng } from 'html-to-image';
 import { db } from "./firebase";
 //import { doc, getDoc, setDoc } from "firebase/firestore";
@@ -88,11 +89,78 @@ const DEFAULT_DOMAINS = [
 ];
 
 
-
+// console.log("Current user:", user);
 
 // const LOCAL_STORAGE_KEY = 'cio_dashboard_data_v7';
 
+
+// 🔹 Simple inline login component
+const USERS: Record<string, { password: string; role: string; domain?: string }> = {
+  admin: { password: "admin123", role: "admin" },
+  hbuser: { password: "hbuser123", role: "domainUser", domain: "Home Buying" },
+  edbuser: { password: "edbuser123", role: "domainUser", domain: "Everyday Banking" },
+  acuser: { password: "acuser123", role: "domainUser", domain: "Assisted Channels" },
+  csuser: { password: "csuser123", role: "domainUser", domain: "Customer Service Channels" },
+  cfuser: { password: "cfuser123", role: "domainUser", domain: "Consumer Finance" },
+  rtenguser: { password: "rtenguser123", role: "domainUser", domain: "Retail Tech Engg" },
+  viewer: { password: "viewer123", role: "viewer" },
+};
+//Added Login Component Below
+const Login: React.FC<{ onLogin: (user: { username: string; role: string; domain?: string }) => void }> = ({ onLogin }) => {
+  const [username, setUsername] = React.useState("");
+  const [password, setPassword] = React.useState("");
+  const [error, setError] = React.useState("");
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    const user = USERS[username];
+    if (user && user.password === password) {
+      onLogin({ username, role: user.role, domain: user.domain });
+    } else {
+      setError("Invalid username or password");
+    }
+  };
+
+  return (
+    <div className="flex items-center justify-center min-h-screen bg-gray-100">
+      <div className="bg-white shadow-lg rounded-xl p-6 w-80">
+        <h1 className="text-xl font-bold text-center mb-4">🔐 CIO Dashboard Login</h1>
+        <form onSubmit={handleSubmit} className="space-y-3">
+          <input
+            type="text"
+            placeholder="Username"
+            value={username}
+            onChange={(e) => setUsername(e.target.value)}
+            className="border p-2 rounded w-full"
+          />
+          <input
+            type="password"
+            placeholder="Password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            className="border p-2 rounded w-full"
+          />
+          {error && <div className="text-red-600 text-sm">{error}</div>}
+          <button type="submit" className="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700">
+            Login
+          </button>
+        </form>
+      </div>
+    </div>
+  );
+};
+
+//Added Login Component Above
+
+
+//New const App function below
+
+//New const App Function above
+
+
 const App = () => {
+  const [user, setUser] = useState<{ username: string; role: string; domain?: string } | null>(null);
+
   const ref = useRef(null);
   const [downloadMode, setDownloadMode] = useState(false);
 
@@ -253,10 +321,29 @@ const App = () => {
       </div>
     );
   };
-  
 
+  // 🔹 Guard: if no user, show login
+  if (!user) {
+    return <Login onLogin={setUser} />;
+  }
+
+  // 🔹 If logged in, show full dashboard
   return (
     <div className="p-6 bg-gray-50 min-h-screen">
+      {/* 🔹 Add welcome banner */}
+      <div className="mb-4 flex justify-between items-center">
+        <h1 className="text-xl font-bold">Welcome, {user.username}!</h1>
+        <button
+          className="text-sm text-red-600 underline"
+          onClick={() => setUser(null)}
+        >
+          Logout
+        </button>
+      </div>
+
+      {/* ⬇️ Paste your ENTIRE dashboard JSX here (the long block you pasted) */}
+      
+      <div className="p-6 bg-gray-50 min-h-screen">
       <div className="text-center mb-6">
         {!downloadMode && (
           <button onClick={handleDownload} className="px-4 py-2 text-sm font-semibold bg-green-600 text-white rounded hover:bg-green-700">
@@ -265,7 +352,7 @@ const App = () => {
         )}
       </div>
 
-      <div ref={ref}>
+      <div ref={ref}> 
       {/* Title */}
 <div className={`${downloadMode ? 'mb-6 text-center' : 'text-center'}`}>
   {!editTitle ? (
@@ -475,12 +562,17 @@ const App = () => {
         <button onClick={() => setEditNotes(false)} className="bg-gray-400 text-white px-3 py-1 rounded">Cancel</button>
       </div>
     </div>
-  )}
+  )} 
 </div>
 
       </div>
     </div>
+
+
+
+    </div>
   );
 };
+
 
 export default App;
