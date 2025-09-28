@@ -4,6 +4,7 @@ import { toPng } from 'html-to-image';
 import { db } from "./firebase";
 //import { doc, getDoc, setDoc } from "firebase/firestore";
 import { doc, getDoc, setDoc, collection, getDocs } from "firebase/firestore";
+//import { doc, setDoc, collection, onSnapshot } from "firebase/firestore";
 
 
 const DOMAIN_COLORS = {
@@ -34,12 +35,25 @@ const RAG_COLORS = {
 const parseLine = (line, index) => {
   if (!line.trim()) return null;
 
-  // Case: <header>Text</header>
-  if (line.startsWith('<header>') && line.endsWith('</header>')) {
-    const content = line.replace(/<header>|<\/header>/g, '');
+  // Case: <header>content</header> - extra
+  if (line.startsWith('<header>') && line.includes('</header>')) {
+    const headerMatch = line.match(/<header>(.*?)<\/header>/);
+    const headerText = headerMatch ? headerMatch[1] : '';
+    const rest = line.replace(/<header>.*?<\/header>/, '').trim().replace(/^-/, '').trim();
+
     return (
-      <div key={index} className="font-bold text-sm text-gray-900">
-        {content}
+      <div key={index} className="text-sm text-gray-900">
+        <strong>{headerText}</strong> {rest}
+      </div>
+    );
+  }
+
+  // Case: <p>Paragraph</p>
+  if (line.startsWith('<p>') && line.endsWith('</p>')) {
+    const content = line.replace(/<p>|<\/p>/g, '');
+    return (
+      <div key={index} className="text-sm text-gray-700">
+        {renderFormattedText(content)}
       </div>
     );
   }
@@ -439,65 +453,72 @@ const App = () => {
             </div>
           </div>
 
-          <MiniChart k={d.keyInitiatives.length} f={d.futureInitiatives.length} r={d.lowsrisks.length} />
+          <MiniChart 
+          k={d.keyInitiatives.filter(item => item.trim() !== "").length} 
+          f={d.futureInitiatives.filter(item => item.trim() !== "").length} 
+          r={d.lowsrisks.filter(item => item.trim() !== "").length} 
+/>
 
           {/* Key Initiatives */}
           <div className="mt-3">
             <div className="font-semibold">
-              Key Initiatives ({d.keyInitiatives.length})
+              Key Initiatives ({d.keyInitiatives.filter(item => item.trim() !== "").length})
             </div>
 
             {/* Only show helper line if > 3 */}
-            {d.keyInitiatives.length > 3 && (
+            {d.keyInitiatives.filter(item => item.trim() !== "").length > 3 && (
               <div className="text-xs text-gray-500 mb-1">Top 3 below:</div>
             )}
 
             <div className="pl-6 space-y-1 text-sm text-gray-700">
               {d.keyInitiatives
+                .filter(item => item.trim() !== "")
                 .slice(0, 3) // restrict to top 3
                 .map((item, idx) => parseLine(item, idx))}
             </div>
           </div>
 
-         
-          {/* Future Initiatives */}
-         
-            <div className="mt-3">
-              <div className="font-semibold">
-                Future Initiatives ({d.futureInitiatives.length})
-              </div>
 
-              {/* Only show helper line if > 3 */}
-              {d.futureInitiatives.length > 3 && (
-                <div className="text-xs text-gray-500 mb-1">Top 3 below:</div>
-              )}
+         
+        {/* Future Initiatives */}
+        <div className="mt-3">
+          <div className="font-semibold">
+            Future Initiatives ({d.futureInitiatives.filter(item => item.trim() !== "").length})
+          </div>
 
-              <div className="pl-6 space-y-1 text-sm text-gray-700">
-                {d.futureInitiatives
-                  .slice(0, 3) // restrict to top 3
-                  .map((item, idx) => parseLine(item, idx))}
-              </div>
-            </div>
+          {/* Only show helper line if > 3 */}
+          {d.futureInitiatives.filter(item => item.trim() !== "").length > 3 && (
+            <div className="text-xs text-gray-500 mb-1">Top 3 below:</div>
+          )}
+
+          <div className="pl-6 space-y-1 text-sm text-gray-700">
+            {d.futureInitiatives
+              .filter(item => item.trim() !== "")
+              .slice(0, 3)
+              .map((item, idx) => parseLine(item, idx))}
+          </div>
+        </div>
+
            
 
-           {/* Lows Risks */}
-         
-            <div className="mt-3">
-              <div className="font-semibold">
-                Lows / Risks ({d.lowsrisks.length})
-              </div>
-
-              {/* Only show helper line if > 3 */}
-              {d.lowsrisks.length > 3 && (
-                <div className="text-xs text-gray-500 mb-1">Top 3 below:</div>
-              )}
-
-              <div className="pl-6 space-y-1 text-sm text-gray-700">
-                {d.lowsrisks
-                  .slice(0, 3) // restrict to top 3
-                  .map((item, idx) => parseLine(item, idx))}
-              </div>
+          {/* Lows Risks */}
+          <div className="mt-3">
+            <div className="font-semibold">
+              Lows / Risks ({d.lowsrisks.filter(item => item.trim() !== "").length})
             </div>
+
+            {/* Only show helper line if > 3 */}
+            {d.lowsrisks.filter(item => item.trim() !== "").length > 3 && (
+              <div className="text-xs text-gray-500 mb-1">Top 3 below:</div>
+            )}
+
+            <div className="pl-6 space-y-1 text-sm text-gray-700">
+              {d.lowsrisks
+                .filter(item => item.trim() !== "")
+                .slice(0, 3)
+                .map((item, idx) => parseLine(item, idx))}
+            </div>
+          </div>
             
 
             {!downloadMode && 
