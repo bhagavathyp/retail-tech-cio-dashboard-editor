@@ -346,9 +346,11 @@ const App = () => {
       <div className="p-6 bg-gray-50 min-h-screen">
       <div className="text-center mb-6">
         {!downloadMode && (
+          
           <button onClick={handleDownload} className="px-4 py-2 text-sm font-semibold bg-green-600 text-white rounded hover:bg-green-700">
             📥 Download as Transparent PNG
           </button>
+
         )}
       </div>
 
@@ -358,7 +360,7 @@ const App = () => {
   {!editTitle ? (
     <>
       <h1 className="text-2xl font-bold mb-2">{title}</h1>
-      {!downloadMode && (
+      {!downloadMode && user?.role === "admin" && (
         <button onClick={() => setEditTitle(true)} className="text-blue-600 text-sm hover:underline">✏️ Edit Title</button>
       )}
     </>
@@ -386,7 +388,7 @@ const App = () => {
           <div className="pl-6 space-y-1">{executiveSummaryRight.map((line, idx) => parseLine(line, idx))}</div>
         </div>
       </div>
-      {!downloadMode && (
+      {!downloadMode && user?.role === "admin" && (
         <div className="text-right mt-2">
           <button onClick={() => setEditSummary(true)} className="text-blue-600 text-sm hover:underline">✏️ Edit Executive Summary</button>
         </div>
@@ -498,7 +500,8 @@ const App = () => {
             </div>
             
 
-          {!downloadMode && (
+            {!downloadMode && 
+            (user?.role === "admin" || user?.domain === d.domainName) && (
             <div className="text-right mt-2">
               <button onClick={() => {
                 setOriginalDomains([...submittedDomains]);
@@ -537,7 +540,7 @@ const App = () => {
     <>
       <div className="flex justify-between items-center">
         <div className="font-bold text-gray-800">Note:</div>
-        {!downloadMode && (
+        {!downloadMode && user?.role === "admin" && (
           <button onClick={() => setEditNotes(true)} className="text-blue-600 text-sm hover:underline">
             ✏️ Edit Note
           </button>
