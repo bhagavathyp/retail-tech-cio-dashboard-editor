@@ -14,7 +14,7 @@ const DOMAIN_COLORS = {
   'Assisted Channels': 'text-yellow-600',
   'Consumer Finance': 'text-emerald-700',
   'Retail Tech Engg': 'text-fuchsia-700',
-  'Run': 'text-cyan-700',        // Retail Run → cyan
+  'AMS': 'text-cyan-700',        // Retail Run → cyan
   'Bankwest': 'text-orange-700', // Bankwest → orange
 };
 
@@ -25,7 +25,7 @@ const ORDER = [
   "Assisted Channels",
   "Consumer Finance",
   "Retail Tech Engg",
-  "Run",        // Retail Run
+  "AMS",        // Retail Run
   "Bankwest"    // Bankwest
 ];
 
@@ -105,7 +105,7 @@ const DEFAULT_DOMAINS = [
   { domainName: 'Consumer Finance', lead: 'Dan Somerset', teamSize: '33', status: 'Green', keyInitiatives: [], futureInitiatives: [], lowsrisks: [], top3: [0, 1, 2], editing: false },
   { domainName: 'Retail Tech Engg', lead: 'Andy McQuarrie', teamSize: '49', status: 'Green', keyInitiatives: [], futureInitiatives: [], lowsrisks: [], top3: [0, 1, 2], editing: false },
    // ✅ New domains
-   { domainName: 'Run', lead: 'Adam Sylvester', teamSize: '33', status: 'Green', keyInitiatives: [], futureInitiatives: [], lowsrisks: [], top3: [0,1,2], editing: false },
+   { domainName: 'AMS', lead: 'Adam Silvester', teamSize: '33', status: 'Green', keyInitiatives: [], futureInitiatives: [], lowsrisks: [], top3: [0,1,2], editing: false },
    { domainName: 'Bankwest', lead: 'Peter Harvey', teamSize: '11', status: 'Green', keyInitiatives: [], futureInitiatives: [], lowsrisks: [], top3: [0,1,2], editing: false }, 
 
 ];
@@ -125,6 +125,9 @@ const USERS: Record<string, { password: string; role: string; domain?: string }>
   csuser: { password: "csuser123", role: "domainUser", domain: "Customer Service Channels" },
   cfuser: { password: "cfuser123", role: "domainUser", domain: "Consumer Finance" },
   rtenguser: { password: "rtenguser123", role: "domainUser", domain: "Retail Tech Engg" },
+  amsuser: { password: "amsuser123", role: "domainUser", domain: "AMS" },
+  bankwestuser: { password: "bankwestuser123", role: "domainUser", domain: "Bankwest" },
+
   viewer: { password: "viewer123", role: "viewer" },
 };
 //Added Login Component Below
