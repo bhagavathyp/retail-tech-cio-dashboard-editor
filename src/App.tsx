@@ -16,6 +16,7 @@ const DOMAIN_COLORS = {
   'Retail Tech Engg': 'text-fuchsia-700',
   'AMS': 'text-cyan-700',        // Retail Run → cyan
   'Bankwest': 'text-orange-700', // Bankwest → orange
+  'RetailTech Digital': 'text-teal-700',
 };
 
 const ORDER = [
@@ -26,7 +27,8 @@ const ORDER = [
   "Consumer Finance",
   "Retail Tech Engg",
   "AMS",        // Retail Run
-  "Bankwest"    // Bankwest
+  "Bankwest",    // Bankwest
+  "RetailTech Digital"
 ];
 
 const RAG_COLORS = {
@@ -107,6 +109,8 @@ const DEFAULT_DOMAINS = [
    // ✅ New domains
    { domainName: 'AMS', lead: 'Adam Silvester', teamSize: '33', status: 'Green', keyInitiatives: [], futureInitiatives: [], lowsrisks: [], top3: [0,1,2], editing: false },
    { domainName: 'Bankwest', lead: 'Peter Harvey', teamSize: '11', status: 'Green', keyInitiatives: [], futureInitiatives: [], lowsrisks: [], top3: [0,1,2], editing: false }, 
+   {
+    domainName: 'RetailTech Digital', lead: 'Wayne Spiteri', teamSize: '41', status: 'Green',keyInitiatives: [],futureInitiatives: [],lowsrisks: [],top3: [0,1,2],editing: false}, 
 
 ];
 
@@ -125,6 +129,7 @@ const USERS: Record<string, { password: string; role: string; domain?: string }>
   csuser: { password: "csuser123", role: "domainUser", domain: "Customer Service Channels" },
   cfuser: { password: "cfuser123", role: "domainUser", domain: "Consumer Finance" },
   rtenguser: { password: "rtenguser123", role: "domainUser", domain: "Retail Tech Engg" },
+  rtdigitaluser: {password: "rtdigital123",role: "domainUser",domain: "RetailTech Digital" },
   amsuser: { password: "amsuser123", role: "domainUser", domain: "AMS" },
   bankwestuser: { password: "bankwestuser123", role: "domainUser", domain: "Bankwest" },
 
